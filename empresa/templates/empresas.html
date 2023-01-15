@@ -22,16 +22,20 @@
             </div>
             <div class="borda-box"></div>
             <div class="body-box">
-                <form>
+                <form action="{% url 'empresas' %}" method="GET">{% csrf_token %}
                 <div class="row">
                     
                         <div class="col-md-5">
-                            <input type="text" placeholder="Busque pelo nome" class="form-control" name="nome">
+                            <input type="text" placeholder="Busque pelo nome" class="form-control" name="nome"
+                            {% if nome_filtro %} value="{{nome_filtro}}" {% endif %}>
                         </div>
 
                         <div class="col-md-4">
                             <select class="form-select" name="tecnologias">
-                                <option value="">--------</option>
+                                <option value=""></option>
+                                {% for tech in tecnologias %}
+                                    <option {% if tech.id == tech_filtro %} selected {% endif %} value="{{tech.id}}">{{tech}}</option>
+                                {% endfor %}
                             </select>
                         </div>
                     
@@ -51,13 +55,13 @@
                     </tr>
                         {% for empresa in empresas %}
                         <tr {% if not forloop.counter|is_par %} class="tabela-linha" {% endif %}>
-                                <td><img class="logo-empresa" src="{{empresa.logo.url}}"></td>
+                                <td><a href="{% url 'empresa' empresa.id %}"><img class="logo-empresa" src="{{empresa.logo.url}}"></a></td>
                                 <td>{{empresa.nome}}</td>
                                 <td>{{empresa.endereco}}</td>
                                 <td>
                                     <select class="form-select">       
                                         {% for tech in empresa.tecnologias.all %}
-                                            <option>{{tech}}</option>                    
+                                            <option {% if tech.id == tech_filtro %} selected {% endif %}>{{tech}}</option>                    
                                         {% endfor %}
                                     </select>
                                 </td>

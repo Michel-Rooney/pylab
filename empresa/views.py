@@ -34,10 +34,28 @@ def nova_empresa(request):
             messages.error(request, 'Erro interno do sistema')
             return redirect('/home/nova_empresa')
 
-def empresas(request):
+def empresas(request):  
+    tecnologias_filtar = request.GET.get('tecnologias')
+    nome_filtrar = request.GET.get('nome')
+    empresas = Empresa.objects.all()
+    
+    if tecnologias_filtar:
+        empresas = empresas.filter(tecnologias=tecnologias_filtar)
+        tecnologias_filtar = int(tecnologias_filtar)
+    if nome_filtrar:
+        empresas = empresas.filter(nome__icontains=nome_filtrar)
+    
+    tecnologias = Tecnologias.objects.all()
+    return render(request, 'empresas.html', {'empresas':empresas, 'tecnologias':tecnologias, 'tech_filtro':tecnologias_filtar, 'nome_filtro':nome_filtrar})
+
+def empresa(request, id):
+    empresa = get_object_or_404(Empresa, id=id)
     empresas = Empresa.objects.all()
     tecnologias = Tecnologias.objects.all()
-    return render(request, 'empresas.html', {'empresas':empresas, 'teclogias':tecnologias})
+    vagas = Vagas.objects.filter(empresa_id=id)
+    return render(request, 'empresa.html', {
+        'empresa':empresa, 'empresas':empresas, 'tecnologias':tecnologias, 'vagas':vagas
+    })
 
 def excluir_empresa(request, id):
     empresa = get_object_or_404(Empresa, id=id)
