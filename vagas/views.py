@@ -1,5 +1,6 @@
 from django.shortcuts import redirect
 from django.contrib import messages
+from .utils import vaga_is_valid
 from empresa.models import Vagas
 from django.http import Http404
 
@@ -14,7 +15,8 @@ def nova_vaga(request):
         tecnologias_nao_domina = request.POST.getlist('tecnologias_nao_domina')
         email = request.POST.get('email')
 
-        # TODO: validations
+        if not vaga_is_valid(request, empresa, titulo, experiencia, data_final, status, tecnologias_domina, tecnologias_domina, email):
+            return redirect(f'/home/empresa/{empresa}')
 
         vaga = Vagas(
             empresa_id=empresa, titulo=titulo, nivel_experiencia=experiencia, data_final=data_final, status=status, email=email
