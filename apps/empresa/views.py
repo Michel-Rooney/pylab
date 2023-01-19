@@ -59,7 +59,10 @@ def empresa(request, id):
 
 def excluir_empresa(request, id):
     empresa = get_object_or_404(Empresa, id=id)
-    os.remove(empresa.logo.path)
+    try:
+        os.remove(empresa.logo.path)
+    except:
+        pass
     empresa.delete()
     messages.success(request, 'Empresa excluida com sucesso')
     return redirect('/home/empresas')

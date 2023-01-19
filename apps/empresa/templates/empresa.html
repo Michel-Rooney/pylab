@@ -57,7 +57,7 @@
             <div class="col-md">
                 <div class="box-vagas">
                     <div class="header-vagas">
-                        {{vaga.titulo}}
+                        <a href="{% url 'vaga' vaga.id %}" style="text-decoration: none; color: inherit;">{{vaga.titulo}}</a>
                     </div>
                     <div class="body-vagas">
                         <div class="row">
